@@ -1,0 +1,38 @@
+/**
+ * Convert a string to snake_case.
+ *
+ * Handles:
+ * - trimming
+ * - camelCase -> snake_case
+ * - spaces and punctuation -> underscores
+ * - collapsing multiple underscores
+ * - removing diacritics (accents)
+ *
+ * Examples:
+ *   toSnakeCase("Hello World") === "hello_world"
+ *   toSnakeCase("fooBarBaz") === "foo_bar_baz"
+ *   toSnakeCase("  --Śome--Text-- ") === "some_text"
+ *
+ * @param {string} input
+ * @returns {string}
+ */
+function toSnakeCase(input) {
+    if (input == null) return '';
+    let s = String(input);
+
+    // Normalize and remove diacritics
+    s = s.normalize && s.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+
+    // Make camelCase boundaries explicit: "fooBar" -> "foo_Bar"
+    s = s.replace(/([a-z0-9])([A-Z])/g, '$1_$2');
+
+    // Replace any sequence of non-alphanumeric characters with an underscore
+    s = s.replace(/[^A-Za-z0-9]+/g, '_');
+
+    // Collapse multiple underscores, lower-case, and trim edge underscores
+    s = s.replace(/_+/g, '_').toLowerCase().replace(/^_+|_+$/g, '');
+
+    return s;
+}
+
+module.exports = toSnakeCase;
